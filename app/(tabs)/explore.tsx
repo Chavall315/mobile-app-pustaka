@@ -151,7 +151,7 @@ export default function RepositoryScreen() {
         {/* Load More Button */}
         <View style={tw`px-6 mt-4`}>
           <Pressable style={tw`bg-white border-2 border-emerald-700 rounded-xl py-3.5 items-center`}>
-            <Text style={tw`text-emerald-700 font-bold text-base`}>Muat Lebih Banyak</Text>
+            <Text style={tw`text-emerald-700 font-bold text-base`}>Muat Lebih Banyak</Text> 
           </Pressable>
         </View>
       </ScrollView>
