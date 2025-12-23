@@ -29,12 +29,9 @@ export default function RepositoryScreen() {
 
         <View style={tw`px-6 mt-8`}>
           <View style={tw`flex-row justify-between items-center mb-4`}>
-            <Text style={tw`text-xl font-bold text-slate-800`}>
-              Koleksi Terbaru
+            <Text style={tw`text-lg font-bold text-slate-800`}>
+              Petunjuk Teknis Bagi Pustakawan
             </Text>
-            <Pressable>
-              <Ionicons name="funnel-outline" size={20} color="#64748b" />
-            </Pressable>
           </View>
 
           {collections.map((item) => (
