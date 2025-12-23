@@ -19,7 +19,6 @@ export default function RepositoryScreen() {
   return (
     <SafeAreaView style={tw`flex-1 bg-black`}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
-        {/* Header with Gradient Effect */}
         <View style={tw`px-6 pt-12 pb-10 bg-emerald-800 rounded-b-[32px] shadow-lg`}>
           <View style={tw`flex-row justify-between items-start mb-6`}>
             <View style={tw`flex-1`}>
@@ -30,12 +29,8 @@ export default function RepositoryScreen() {
                 Akses literatur digital pertanian terlengkap
               </Text>
             </View>
-            <Pressable style={tw`bg-emerald-700/50 p-3 rounded-full`}>
-              <Ionicons name="bookmark-outline" size={22} color="#fff" />
-            </Pressable>
           </View>
 
-          {/* Search Bar */}
           <View style={tw`flex-row items-center bg-white rounded-2xl px-4 py-1 shadow-md ${searchFocused ? 'border-2 border-emerald-500' : ''}`}>
             <Ionicons name="search-outline" size={22} color={searchFocused ? "#10b981" : "#64748b"} />
             <TextInput
@@ -53,28 +48,8 @@ export default function RepositoryScreen() {
           </View>
         </View>
 
-        {/* Quick Stats */}
-        <View style={tw`px-6 mt-6`}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={tw`-mx-1`}>
-            {[
-              { icon: 'book-outline', label: '1.2K Buku', color: 'bg-blue-50 border-blue-100' },
-              { icon: 'document-text-outline', label: '850 Jurnal', color: 'bg-purple-50 border-purple-100' },
-              { icon: 'newspaper-outline', label: '430 Buletin', color: 'bg-amber-50 border-amber-100' },
-            ].map((stat, idx) => (
-              <Pressable
-                key={idx}
-                style={tw`${stat.color} border px-5 py-3.5 rounded-xl mr-3 flex-row items-center`}
-              >
-                <Ionicons name={stat.icon} size={20} color="#059669" />
-                <Text style={tw`text-slate-700 font-semibold ml-2 text-sm`}>{stat.label}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </View>
-
-        {/* Categories */}
-        <View style={tw`px-6 mt-8`}>
-          <View style={tw`flex-row justify-between items-center mb-4`}>
+        <View style={tw`mt-8`}>
+          <View style={tw`flex-row justify-between items-center mb-4 px-6`}>
             <Text style={tw`text-xl font-bold text-slate-800`}>Kategori</Text>
             <Pressable style={tw`flex-row items-center`}>
               <Text style={tw`text-emerald-700 font-semibold text-sm`}>Lihat Semua</Text>
@@ -82,7 +57,7 @@ export default function RepositoryScreen() {
             </Pressable>
           </View>
 
-          <View style={tw`flex-row flex-wrap gap-3`}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={tw`px-6 gap-3`}>
             {categories.map((item) => (
               <Pressable
                 key={item}
@@ -98,7 +73,7 @@ export default function RepositoryScreen() {
                 </Text>
               </Pressable>
             ))}
-          </View>
+          </ScrollView>
         </View>
 
         <View style={tw`px-6 mt-8`}>
@@ -148,7 +123,6 @@ export default function RepositoryScreen() {
           ))}
         </View>
 
-        {/* Load More Button */}
         <View style={tw`px-6 mt-4`}>
           <Pressable style={tw`bg-white border-2 border-emerald-700 rounded-xl py-3.5 items-center`}>
             <Text style={tw`text-emerald-700 font-bold text-base`}>Muat Lebih Banyak</Text>
