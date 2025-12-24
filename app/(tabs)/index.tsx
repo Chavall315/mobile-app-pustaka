@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, Pressable, ScrollView, StatusBar, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,15 +9,15 @@ const OPACScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Cari' | 'Browse'>('Cari');
 
   const featuredBooks = [
-    { title: 'Penyuluhan pertanian / Mayasari Pengembangan Sinar Tani', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/4647.jpg' },
-    { title: 'Dinamika penyuluhan pertanian / Leta Rafael Levis', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/63496.jpg' },
-    { title: 'Optimalisasi lahan rawa: akselerasi menuju lumbung pangan dunia 2045', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/76563.jpg' },
+    { title: 'Penyuluhan pertanian / Mayasari Pengembangan Sinar Tani', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/4647.jpg', href : '/detail/detail_buku' },
+    { title: 'Dinamika penyuluhan pertanian / Leta Rafael Levis', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/63496.jpg', href : '/detail/detail_buku' },
+    { title: 'Optimalisasi lahan rawa: akselerasi menuju lumbung pangan dunia 2045', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/76563.jpg', href : '/detail/detail_buku' },
   ];
 
   const recentBooks = [
-    { title: 'Hama dan penyakit pada tanaman kentang', isPlaceholder: true },
-    { title: 'Proceedings seminar sistem pengurusan hutan alam', isPlaceholder: true },
-    { title: 'Simposium pemanfaatan tempe dalam kesehatan', isPlaceholder: true },
+    { title: 'Hama dan penyakit pada tanaman kentang', isPlaceholder: true, href : '/detail/detail_buku' },
+    { title: 'Proceedings seminar sistem pengurusan hutan alam', isPlaceholder: true, href : '/detail/detail_buku' },
+    { title: 'Simposium pemanfaatan tempe dalam kesehatan', isPlaceholder: true, href : '/detail/detail_buku' },
   ];
 
   const handleSearch = (query: string) => {
@@ -52,15 +53,15 @@ const OPACScreen: React.FC = () => {
           {/* Tab Switcher */}
           <View style={tw`flex-row bg-gray-100 rounded-xl p-1 mb-4`}>
             {(['Cari', 'Browse'] as const).map((tab) => (
-              <Pressable
-                key={tab}
-                onPress={() => setActiveTab(tab)}
-                style={tw`flex-1 py-2 rounded-lg ${activeTab === tab ? 'bg-white shadow-sm' : ''}`}
-              >
-                <Text style={tw`text-center font-bold ${activeTab === tab ? 'text-emerald-800' : 'text-gray-400'}`}>
-                  {tab}
-                </Text>
-              </Pressable>
+                <Pressable
+                  key={tab}
+                  onPress={() => setActiveTab(tab)}
+                  style={tw`flex-1 py-2 rounded-lg ${activeTab === tab ? 'bg-white shadow-sm' : ''}`}
+                >
+                  <Text style={tw`text-center font-bold ${activeTab === tab ? 'text-emerald-800' : 'text-gray-400'}`}>
+                    {tab}
+                  </Text>
+                </Pressable>
             ))}
           </View>
 
@@ -117,7 +118,10 @@ const OPACScreen: React.FC = () => {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item }) => (
-                <Pressable style={tw`w-40 mr-5`}>
+                <Pressable 
+                  style={tw`w-40 mr-5`}
+                  onPress={() => router.push(item.href)}
+                >
                   <View style={tw`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden`}>
                     <Image 
                       source={{ uri: item.coverUrl }}
@@ -156,7 +160,10 @@ const OPACScreen: React.FC = () => {
               showsHorizontalScrollIndicator={false}
               keyExtractor={(_, index) => index.toString()}
               renderItem={({ item }) => (
-                <Pressable style={tw`w-40 mr-5`}>
+                <Pressable 
+                  style={tw`w-40 mr-5`}
+                  onPress={() => router.push(item.href)}
+                >
                   <View style={tw`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden`}>
                     <View style={tw`h-56 bg-gray-100 items-center justify-center p-4`}>
                       <Text style={tw`text-gray-300 text-[10px] font-bold text-center tracking-widest leading-4`}>
