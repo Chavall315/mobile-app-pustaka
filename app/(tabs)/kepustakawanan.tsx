@@ -1,14 +1,16 @@
-import { Feather, Ionicons } from '@expo/vector-icons';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
 export default function RepositoryScreen() {
 
-  const collections = [
-    { id: 1, title: 'Panduan Budidaya Hidroponik Modern', type: 'BUKU', year: '2024', author: 'Dr. Ahmad Santoso' },
-    { id: 2, title: 'Teknologi Pertanian Berkelanjutan', type: 'JURNAL', year: '2024', author: 'Prof. Sri Rahayu' },
-    { id: 3, title: 'Inovasi Pupuk Organik Nusantara', type: 'BULETIN', year: '2023', author: 'Tim Peneliti BPTP' },
+  const collections: Array<{ id: number; title: string; type: string; year: string; author: string; image: any }> = [
+    { id: 1, title: 'Panduan Budidaya Hidroponik Modern', type: 'BUKU', year: '2024', author: 'Dr. Ahmad Santoso', image: require('../../assets/images/pdf.png') },
+    { id: 2, title: 'Teknologi Pertanian Berkelanjutan', type: 'JURNAL', year: '2024', author: 'Prof. Sri Rahayu', image: require('../../assets/images/pdf.png') },
+    { id: 3, title: 'Inovasi Pupuk Organik Nusantara', type: 'BULETIN', year: '2023', author: 'Tim Peneliti BPTP', image: require('../../assets/images/pdf.png') },
+    { id: 4, title: 'Analisis Informasi menentukan konsep-konsep penting', type: 'PDF', year: '2022', author: 'Tim Peneliti BPTP', image: require('../../assets/images/pdf.png') },
+    { id: 5, title: 'Pengelolaan Mikrofis', type: 'BULETIN', year: '2022', author: 'Tim Peneliti BPTP', image: require('../../assets/images/pdf.png') },
   ];
   
   return (
@@ -37,10 +39,12 @@ export default function RepositoryScreen() {
           {collections.map((item) => (
             <Pressable
               key={item.id}
+              onPress={() => {}}
+              accessibilityRole="button"
               style={tw`flex-row bg-white rounded-2xl p-4 mb-3 shadow-sm border border-gray-100 active:bg-gray-50`}
             >
               <View style={tw`w-18 h-24 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl items-center justify-center mr-4 shadow-sm`}>
-                <Feather name="file-text" size={28} color="#b40707ff" />
+                <Image source={item.image} style={tw`w-12 h-16`} resizeMode="contain" />
               </View>
 
               <View style={tw`flex-1 justify-center pr-2`}>
