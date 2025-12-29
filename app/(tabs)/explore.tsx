@@ -1,4 +1,6 @@
+import { Collection, collections } from '@/data/collections';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -7,7 +9,7 @@ import tw from 'twrnc';
 export default function RepositoryScreen() {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredCollections, setFilteredCollections] = useState([]);
+  const [filteredCollections, setFilteredCollections] = useState<Collection[]>([])
 
   const categories = [
     'Buku', 
@@ -20,44 +22,6 @@ export default function RepositoryScreen() {
     'Prosiding', 
     'Warta'
   ];
-  
-  const collections = [
-    { 
-      id: 1, 
-      title: 'Bank Pengetahuan Padi Indonesia', 
-      author: 'Balai Penelitian Tanaman Kacang-kacangan dan Umbi-umbian',
-      year: '2008',
-      image: require('../../assets/images/cover1.jpg')
-    },
-    { 
-      id: 2, 
-      title: 'Pengelolaan Spesipik lokasi Tanaman Jagung', 
-      author: 'Badan Penelitian dan Pengembangan Pertanian',
-      year: '2008',
-      image: require('../../assets/images/cover2.jpg')
-    },
-    { 
-      id: 3, 
-      title: 'Petunjuk Teknis Pengendalian Terpadu Penyakit Tungro', 
-      author: 'Pusat Penelitian dan Pengembangan Tanaman Pangan',
-      year: '2007',
-      image: require('../../assets/images/cover3.jpg')
-    },
-    { 
-      id: 4, 
-      title: 'Petunjuk Teknis Pengendalian Terpadu Penyakit Tungro', 
-      author: 'Pusat Penelitian dan Pengembangan Tanaman Pangan',
-      year: '2007',
-      image: require('../../assets/images/cover3.jpg')
-    },
-    { 
-      id: 5, 
-      title: 'Petunjuk Teknis Pengelolaan Sistem Usahatani di Lahan Pasang Surut', 
-      author: 'Pusat Penelitian dan Pengembangan Tanaman Pangan',
-      year: '1993',
-      image: require('../../assets/images/cover5.jpg')
-    },
-  ];
 
   const handleSearch = (text: string) => {
     setSearchQuery(text);
@@ -66,7 +30,7 @@ export default function RepositoryScreen() {
       return;
     }
 
-    const filtered = collections.filter(item => 
+    const filtered = collections.filter((item: Collection) =>
       item.title.toLowerCase().includes(text.toLowerCase()) ||
       item.author.toLowerCase().includes(text.toLowerCase())
     );
@@ -85,8 +49,11 @@ export default function RepositoryScreen() {
   };
 
   
-  const handleItemPress = (item: any) => {
-    console.log('Navigating to:', item.title);
+  const handleItemPress = (item: { id: number }) => {
+    router.push({
+      pathname: '/lengkap/lengkap',
+      params: { id: item.id.toString() },
+    });
   };
 
   
@@ -219,15 +186,18 @@ export default function RepositoryScreen() {
                     >
                       {item.title}
                     </Text>
+                    <View style={tw`flex-row items-center mb-0.5`}>
+                      <Text style={tw`text-slate-500 text-sm flex-1`} numberOfLines={1}>
+                        {item.publisher}
+                      </Text>
+                    </View>
                     <View style={tw`flex-row items-center mb-2`}>
-                      <Ionicons name="document-text-outline" size={16} color="#64748b" />
-                      <Text style={tw`text-slate-500 text-sm ml-2 flex-1`} numberOfLines={1}>
+                      <Text style={tw`text-slate-500 text-sm flex-1`} numberOfLines={1}>
                         {item.author}
                       </Text>
                     </View>
                     <View style={tw`flex-row items-center`}>
-                      <Ionicons name="calendar-outline" size={16} color="#64748b" />
-                      <Text style={tw`text-slate-400 text-sm ml-2`}>
+                      <Text style={tw`text-slate-400 text-sm`}>
                         {item.year}
                       </Text>
                     </View>
