@@ -56,72 +56,85 @@ export default function RepositoryScreen() {
     });
   };
 
-  
-  const handleFilterPress = () => {
-    console.log('Filter pressed');
-  };
-
   const handleLoadMore = () => {
-    console.log('Load more pressed');
+    router.push({
+      pathname: '/full/full'
+    })
   };
 
   return (
     <SafeAreaView style={tw`flex-1 bg-black`}>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
-        <View style={tw`px-6 pt-12 pb-10 bg-emerald-800 rounded-b-[32px] shadow-lg`}>
-          <View style={tw`flex-row justify-between items-start mb-6`}>
-            <View style={tw`flex-1`}>
-              <Text style={tw`text-white text-3xl font-extrabold tracking-tight`}>
+        {/* Header Section */}
+        <View style={tw`px-6 pt-10 pb-8 bg-emerald-700 rounded-b-3xl`}>
+          <View style={tw`mb-6`}>
+            <View style={tw`flex-row items-center mb-2`}>
+              <View style={tw`w-1.5 h-8 bg-emerald-300 rounded-full mr-3`} />
+              <Text style={tw`text-white text-3xl font-bold tracking-tight`}>
                 Repositori
               </Text>
-              <Text style={tw`text-emerald-100 text-base mt-2 leading-5`}>
-                Akses literatur digital pertanian terlengkap
-              </Text>
             </View>
+            <Text style={tw`text-emerald-100 text-sm leading-5 ml-5`}>
+              Akses literatur digital pertanian terlengkap
+            </Text>
           </View>
 
-          <View style={tw`flex-row items-center bg-white rounded-2xl px-4 py-1 shadow-md ${searchFocused ? 'border-2 border-emerald-500' : ''}`}>
-            <Ionicons name="search-outline" size={22} color={searchFocused ? "#10b981" : "#64748b"} />
+          {/* Search Bar */}
+          <View style={[
+            tw`flex-row items-center bg-white rounded-2xl px-4 shadow-lg`,
+            searchFocused && tw`ring-2 ring-emerald-400`
+          ]}>
+            <View style={tw`w-10 h-10 bg-emerald-50 rounded-xl items-center justify-center`}>
+              <Ionicons name="search-outline" size={20} color="#059669" />
+            </View>
             <TextInput 
               placeholder="Cari jurnal, buku, atau artikel..." 
               placeholderTextColor="#94a3b8" 
-              style={tw`flex-1 ml-3 h-12 text-gray-800 text-base`}
+              style={tw`flex-1 ml-3 h-14 text-gray-800 text-base`}
               value={searchQuery}
               onChangeText={handleSearch}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
             />
             {searchQuery.trim() !== '' && (
-              <Pressable onPress={clearSearch} style={tw`mr-2`}>
-                <Ionicons name="close-circle" size={20} color="#64748b" />
+              <Pressable onPress={clearSearch} style={tw`w-8 h-8 bg-gray-100 rounded-full items-center justify-center mr-2`}>
+                <Ionicons name="close" size={16} color="#64748b" />
               </Pressable>
             )}
             {searchFocused && (
-              <Pressable>
-                <Ionicons name="options-outline" size={20} color="#10b981" />
+              <Pressable style={tw`w-10 h-10 bg-emerald-50 rounded-xl items-center justify-center`}>
+                <Ionicons name="options-outline" size={20} color="#059669" />
               </Pressable>
             )}
           </View>
         </View>
 
+        {/* Categories Section */}
         <View style={tw`mt-8`}>
-          <View style={tw`mb-4 px-6`}>
-            <Text style={tw`text-xl font-bold text-slate-800`}>
-              Communities in Repositori
-            </Text>
-            <Text style={tw`text-sm font-semibold text-gray-500`}>
+          <View style={tw`mb-5 px-6`}>
+            <View style={tw`flex-row items-center mb-1`}>
+              <View style={tw`w-1 h-6 bg-emerald-500 rounded-full mr-3`} />
+              <Text style={tw`text-xl font-bold text-slate-800`}>
+                Communities in Repositori
+              </Text>
+            </View>
+            <Text style={tw`text-sm text-slate-500 ml-7`}>
               Select a community to browse its collections.
             </Text>
           </View>
 
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={tw`px-6 gap-3`}>
-            {categories.map((item) => (
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false} 
+            contentContainerStyle={tw`px-6`}
+          >
+            {categories.map((item, index) => (
               <Pressable
                 key={item}
                 onPress={() => handleCategoryPress(item)}
-                style={tw`bg-white border border-gray-200 px-6 py-3 rounded-xl active:bg-emerald-50 active:border-emerald-300`}
+                style={tw`bg-white border border-gray-200 px-5 py-3.5 rounded-xl shadow-sm mr-3`}
               >
-                <Text style={tw`text-slate-600 font-semibold text-sm`}>
+                <Text style={tw`text-slate-700 font-semibold text-sm`}>
                   {item}
                 </Text>
               </Pressable>
@@ -129,32 +142,32 @@ export default function RepositoryScreen() {
           </ScrollView>
         </View>
 
+        {/* Results Section */}
         <View style={tw`px-6 mt-8 mb-6`}>
-          <View style={tw`flex-row justify-between items-center mb-5`}>
-            <View>
+          <View style={tw`mb-5`}>
+            <View style={tw`flex-row items-center mb-1`}>
+              <View style={tw`w-1 h-7 bg-emerald-500 rounded-full mr-3`} />
               <Text style={tw`text-2xl font-bold text-slate-800`}>
                 {searchQuery.trim() !== '' ? 'Search Results' : 'Recent Submissions'}
               </Text>
-              <Text style={tw`text-sm text-slate-500 mt-1`}>
+            </View>
+            <View style={tw`flex-row items-center ml-7 mt-1`}>
+              <View style={tw`w-2 h-2 rounded-full bg-emerald-400 mr-2`} />
+              <Text style={tw`text-sm text-slate-500`}>
                 {displayCollections.length} publikasi {searchQuery.trim() !== '' ? 'ditemukan' : 'terbaru'}
               </Text>
             </View>
-            <Pressable 
-              onPress={handleFilterPress}
-              style={tw`bg-white border border-gray-200 rounded-xl px-4 py-2.5 flex-row items-center shadow-sm active:bg-gray-100`}
-            >
-              <Ionicons name="funnel-outline" size={18} color="#64748b" />
-              <Text style={tw`text-slate-600 text-sm ml-2 font-medium`}>Filter</Text>
-            </Pressable>
           </View>
 
           {displayCollections.length === 0 ? (
-            <View style={tw`items-center py-12`}>
-              <Ionicons name="document-outline" size={64} color="#cbd5e1" />
-              <Text style={tw`text-slate-400 text-base mt-4 font-medium`}>
+            <View style={tw`items-center py-16 bg-white rounded-2xl border border-gray-200`}>
+              <View style={tw`w-20 h-20 bg-gray-100 rounded-full items-center justify-center mb-4`}>
+                <Ionicons name="search-outline" size={40} color="#cbd5e1" />
+              </View>
+              <Text style={tw`text-slate-700 text-lg font-semibold`}>
                 Tidak ada hasil ditemukan
               </Text>
-              <Text style={tw`text-slate-400 text-sm mt-1`}>
+              <Text style={tw`text-slate-400 text-sm mt-2`}>
                 Coba kata kunci lain
               </Text>
             </View>
@@ -164,47 +177,64 @@ export default function RepositoryScreen() {
                 <Pressable 
                   key={item.id} 
                   onPress={() => handleItemPress(item)}
-                  style={tw`flex-row bg-white rounded-2xl p-5 mb-4 shadow-md border border-gray-100 active:bg-gray-50 active:scale-98`}
+                  style={tw`flex-row bg-white rounded-2xl p-5 mb-4 shadow-sm border border-gray-100`}
                 >
+                  {/* Image Container */}
                   <View style={tw`relative mr-5`}>
-                    <View style={tw`w-28 h-36 rounded-xl overflow-hidden bg-emerald-50 shadow-sm`}>
+                    <View style={tw`w-32 h-44 rounded-xl overflow-hidden bg-gray-100 shadow-sm`}>
                       <Image 
                         source={item.image}
                         style={tw`w-full h-full`}
                         resizeMode="cover"
                       />
                     </View>
-                    <View style={tw`absolute -top-2 -left-2 bg-blue-500 px-2.5 py-1 rounded-md shadow-sm`}>
+                    {/* Item Badge */}
+                    <View style={tw`absolute -top-2 -left-2 bg-blue-600 px-3 py-1.5 rounded-lg shadow-md`}>
                       <Text style={tw`text-white text-xs font-bold`}>Item</Text>
                     </View>
-                  </View>
-
-                  <View style={tw`flex-1 justify-center pr-3`}>
-                    <Text 
-                      style={tw`font-bold text-slate-800 text-lg mb-2.5 leading-6`} 
-                      numberOfLines={2}
-                    >
-                      {item.title}
-                    </Text>
-                    <View style={tw`flex-row items-center mb-0.5`}>
-                      <Text style={tw`text-slate-500 text-sm flex-1`} numberOfLines={1}>
-                        {item.publisher}
-                      </Text>
-                    </View>
-                    <View style={tw`flex-row items-center mb-2`}>
-                      <Text style={tw`text-slate-500 text-sm flex-1`} numberOfLines={1}>
-                        {item.author}
-                      </Text>
-                    </View>
-                    <View style={tw`flex-row items-center`}>
-                      <Text style={tw`text-slate-400 text-sm`}>
+                    {/* Year Badge */}
+                    <View style={tw`absolute bottom-2 left-2 bg-black/80 px-2.5 py-1 rounded-lg`}>
+                      <Text style={tw`text-white text-xs font-bold`}>
                         {item.year}
                       </Text>
                     </View>
                   </View>
-                  
-                  <View style={tw`justify-center`}>
-                    <Ionicons name="chevron-forward" size={26} color="#10b981" />
+
+                  {/* Content */}
+                  <View style={tw`flex-1 justify-between py-1`}>
+                    <View>
+                      <Text 
+                        style={tw`font-bold text-slate-800 text-lg leading-6 mb-3`} 
+                        numberOfLines={3}
+                      >
+                        {item.title}
+                      </Text>
+                      
+                      <View style={tw`flex-row items-center mb-2`}>
+                        <View style={tw`w-5 h-5 bg-purple-100 rounded-md items-center justify-center mr-2`}>
+                          <Ionicons name="business" size={12} color="#7c3aed" />
+                        </View>
+                        <Text style={tw`text-slate-600 text-sm flex-1`} numberOfLines={2}>
+                          {item.publisher}
+                        </Text>
+                      </View>
+                      
+                      <View style={tw`flex-row items-center`}>
+                        <View style={tw`w-5 h-5 bg-blue-100 rounded-md items-center justify-center mr-2`}>
+                          <Ionicons name="person" size={12} color="#2563eb" />
+                        </View>
+                        <Text style={tw`text-slate-600 text-sm flex-1`} numberOfLines={2}>
+                          {item.author}
+                        </Text>
+                      </View>
+                    </View>
+
+                    {/* Arrow Button */}
+                    <View style={tw`flex-row justify-end mt-3`}>
+                      <View style={tw`w-9 h-9 bg-emerald-500 rounded-xl items-center justify-center shadow-sm`}>
+                        <Ionicons name="arrow-forward" size={18} color="#ffffff" />
+                      </View>
+                    </View>
                   </View>
                 </Pressable>
               ))}
@@ -212,11 +242,13 @@ export default function RepositoryScreen() {
               {searchQuery.trim() === '' && (
                 <Pressable 
                   onPress={handleLoadMore}
-                  style={tw`bg-emerald-50 border-2 border-emerald-200 border-dashed rounded-xl py-4 items-center mt-2 active:bg-emerald-100`}
+                  style={tw`bg-white border-2 border-emerald-500 rounded-2xl py-5 items-center mt-2 shadow-sm`}
                 >
                   <View style={tw`flex-row items-center`}>
-                    <Ionicons name="add-circle-outline" size={20} color="#059669" />
-                    <Text style={tw`text-emerald-600 font-semibold ml-2`}>
+                    <View style={tw`w-8 h-8 bg-emerald-50 rounded-full items-center justify-center mr-3`}>
+                      <Ionicons name="add" size={20} color="#059669" />
+                    </View>
+                    <Text style={tw`text-emerald-700 font-bold text-base`}>
                       Lihat Lebih Banyak
                     </Text>
                   </View>
@@ -228,4 +260,4 @@ export default function RepositoryScreen() {
       </ScrollView>
     </SafeAreaView>
   );
-} 
+}
