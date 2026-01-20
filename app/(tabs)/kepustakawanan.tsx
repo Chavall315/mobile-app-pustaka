@@ -36,26 +36,6 @@ const handleSearch = (text: string) => {
     setFilteredCollections([]);
   };
 
-  const displayCollections = searchQuery.trim() !== '' ? filteredCollections : collections;
-
-  const handleCategoryPress = (category: string) => {
-    console.log('Navigating to category:', category);
-  };
-
-  
-  const handleItemPress = (item: any) => {
-    console.log('Navigating to:', item.title);
-  };
-
-  
-  const handleFilterPress = () => {
-    console.log('Filter pressed');
-  };
-
-  const handleLoadMore = () => {
-    console.log('Load more pressed');
-  };
-
   return (
     <SafeAreaView style={tw`flex-1 bg-black`}>
       <StatusBar barStyle="light-content" />
