@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { FlatList, Image, Pressable, ScrollView, StatusBar, Text, TextInput, View } from 'react-native';
@@ -6,7 +7,7 @@ import tw from 'twrnc';
 
 const OPACScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'Cari' | 'Browse'>('Cari');
+  const [activeTab, setActiveTab] = useState<'Cari'>('Cari');
 
   const featuredBooks = [
     { title: 'Penyuluhan pertanian / Mayasari Pengembangan Sinar Tani', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/4647.jpg', href : '/detail/detail_buku' },
@@ -38,12 +39,6 @@ const OPACScreen: React.FC = () => {
                   Perpustakaan Pertanian
                 </Text>
               </View>
-              
-              <View style={tw`flex-row bg-emerald-900/50 rounded-full px-2 py-1`}>
-                <Pressable style={tw`px-3 py-1`}><Text style={tw`text-white text-xs font-bold`}>Login</Text></Pressable>
-                <View style={tw`w-[1px] h-3 bg-white/20 self-center`} />
-                <Pressable style={tw`px-3 py-1`}><Text style={tw`text-white text-xs font-bold`}>Daftar</Text></Pressable>
-              </View>
             </View>
           </View>
         </View>
@@ -52,7 +47,7 @@ const OPACScreen: React.FC = () => {
         <View style={tw`bg-white mt-6 rounded-3xl p-5 shadow-xl border border-gray-100`}>
           {/* Tab Switcher */}
           <View style={tw`flex-row bg-gray-100 rounded-xl p-1 mb-4`}>
-            {(['Cari', 'Browse'] as const).map((tab) => (
+            {(['Cari'] as const).map((tab) => (
                 <Pressable
                   key={tab}
                   onPress={() => setActiveTab(tab)}
@@ -67,7 +62,9 @@ const OPACScreen: React.FC = () => {
 
           {/* Input Field */}
           <View style={tw`flex-row items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-1 mb-3`}>
-            <Text style={tw`text-lg mr-2`}>🔍</Text>
+            <View style={tw`w-10 h-10 rounded-xl items-center justify-center`}>
+              <Ionicons name="search-outline" size={20} color="#059669" />
+            </View>
             <TextInput
               placeholder="Cari judul, pengarang..."
               value={searchQuery}
@@ -79,21 +76,12 @@ const OPACScreen: React.FC = () => {
 
           {/* Filters and Action */}
           <View style={tw`flex-row gap-2`}>
-            <Pressable style={tw`flex-1 bg-gray-50 border border-gray-200 rounded-xl justify-center items-center py-3`}>
-              <Text style={tw`text-xs text-gray-600 font-semibold`}>Semua Bahan ▾</Text>
-            </Pressable>
             <Pressable 
               onPress={() => handleSearch(searchQuery)}
               style={tw`flex-1 bg-emerald-600 rounded-xl justify-center items-center py-3 shadow-md`}
             >
               <Text style={tw`text-white font-bold`}>Cari Sekarang</Text>
             </Pressable>
-          </View>
-
-          <View style={tw`flex-row justify-center gap-4 mt-4`}>
-            <Text style={tw`text-[11px] text-emerald-700 font-medium`}>Pencarian Lanjut</Text>
-            <Text style={tw`text-[11px] text-gray-300`}>|</Text>
-            <Text style={tw`text-[11px] text-emerald-700 font-medium`}>Bantuan</Text>
           </View>
         </View>
 

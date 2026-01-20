@@ -57,9 +57,9 @@ const handleSearch = (text: string) => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-white`}>
+    <SafeAreaView style={tw`flex-1 bg-black`}>
       <StatusBar barStyle="light-content" />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10`}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
         
         <View style={tw`px-6 pt-12 pb-10 bg-emerald-800 rounded-b-[32px] shadow-lg`}>
           <View style={tw`flex-row justify-between items-start mb-6`}>
