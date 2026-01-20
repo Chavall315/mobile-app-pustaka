@@ -26,11 +26,11 @@ const OPACScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-black`}>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      <StatusBar barStyle="dark-content" />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
         {/* Header */}
         <View style={tw`bg-emerald-800 rounded-b-[35px] shadow-lg`}>
-          <StatusBar barStyle="light-content" />
           <View style={tw`pt-4 pb-8 mt-7 px-6`}>
             <View style={tw`flex-row justify-between items-center`}>
               <View>

@@ -10,14 +10,14 @@ export default function RepositoryScreen() {
   const [filteredCollections, setFilteredCollections] = useState([]);
   
   const collections = [
-    { id: 1, title: 'Panduan Budidaya Hidroponik Modern', type: 'BUKU', year: '2024', author: 'Dr. Ahmad Santoso', size: '4.2 MB' },
-    { id: 2, title: 'Teknologi Pertanian Berkelanjutan', type: 'JURNAL', year: '2024', author: 'Prof. Sri Rahayu', size: '2.8 MB' },
-    { id: 3, title: 'Inovasi Pupuk Organik Nusantara', type: 'BULETIN', year: '2023', author: 'Tim Peneliti BPTP', size: '1.5 MB' },
-    { id: 4, title: 'Analisis Informasi menentukan konsep-konsep penting', type: 'PDF', year: '2022', author: 'Tim Peneliti BPTP', size: '5.0 MB' },
-    { id: 5, title: 'Pengelolaan Mikrofis', type: 'BULETIN', year: '2022', author: 'Tim Peneliti BPTP', size: '0.9 MB' },
+    { id: 1, title: 'Panduan Budidaya Hidroponik Modern', type: 'BUKU', year: '2024', author: 'Dr. Ahmad Santoso', size: '4.2 MB', pages: 248 },
+    { id: 2, title: 'Teknologi Pertanian Berkelanjutan', type: 'JURNAL', year: '2024', author: 'Prof. Sri Rahayu', size: '2.8 MB', pages: 156 },
+    { id: 3, title: 'Inovasi Pupuk Organik Nusantara', type: 'BULETIN', year: '2023', author: 'Tim Peneliti BPTP', size: '1.5 MB', pages: 84 },
+    { id: 4, title: 'Analisis Informasi menentukan konsep-konsep penting', type: 'ARTIKEL', year: '2022', author: 'Tim Peneliti BPTP', size: '5.0 MB', pages: 32 },
+    { id: 5, title: 'Pengelolaan Hama Terpadu pada Tanaman Padi', type: 'BULETIN', year: '2022', author: 'Dr. Budi Hartono', size: '0.9 MB', pages: 48 },
   ];
 
-const handleSearch = (text: string) => {
+  const handleSearch = (text) => {
     setSearchQuery(text);
     if (text.trim() === '') {
       setFilteredCollections([]);
@@ -26,7 +26,8 @@ const handleSearch = (text: string) => {
 
     const filtered = collections.filter(item => 
       item.title.toLowerCase().includes(text.toLowerCase()) ||
-      item.author.toLowerCase().includes(text.toLowerCase())
+      item.author.toLowerCase().includes(text.toLowerCase()) ||
+      item.type.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredCollections(filtered);
   };
@@ -36,100 +37,138 @@ const handleSearch = (text: string) => {
     setFilteredCollections([]);
   };
 
+  const displayedCollections = searchQuery.trim() !== '' ? filteredCollections : collections;
+
+  const getTypeColor = (type) => {
+    const colors = {
+      'BUKU': { bg: 'bg-blue-50', text: 'text-blue-700', icon: '#2563eb' },
+      'JURNAL': { bg: 'bg-purple-50', text: 'text-purple-700', icon: '#7c3aed' },
+      'BULETIN': { bg: 'bg-amber-50', text: 'text-amber-700', icon: '#d97706' },
+      'ARTIKEL': { bg: 'bg-emerald-50', text: 'text-emerald-700', icon: '#059669' },
+      'PDF': { bg: 'bg-slate-50', text: 'text-slate-700', icon: '#475569' }
+    };
+    return colors[type] || colors['PDF'];
+  };
+
   return (
-    <SafeAreaView style={tw`flex-1 bg-black`}>
-      <StatusBar barStyle="light-content" />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      <StatusBar barStyle="dark-content" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-8`}>
         
-        <View style={tw`px-6 pt-12 pb-10 bg-emerald-800 rounded-b-[32px] shadow-lg`}>
-          <View style={tw`flex-row justify-between items-start mb-6`}>
-            <View style={tw`flex-1`}>
-              <Text style={tw`text-white text-3xl font-extrabold tracking-tight`}>
-                Kepustakawanan
-              </Text>
-              <Text style={tw`text-emerald-100 text-base mt-2 leading-5`}>
-                Akses literatur digital pertanian terlengkap
-              </Text>
-            </View>
+        {/* Header */}
+        <View style={tw`px-5 pt-6 pb-8 bg-emerald-800`}>
+          <View style={tw`mb-6`}>
+            <Text style={tw`text-slate-300 text-3xl font-bold tracking-tight mb-2`}>
+              Kepustakawanan
+            </Text>
+            <Text style={tw`text-slate-200 text-base leading-6`}>
+              {collections.length} dokumen literatur digital tersedia
+            </Text>
           </View>
 
-          <View style={tw`flex-row items-center bg-white rounded-2xl px-4 py-1 shadow-md ${searchFocused ? 'border-2 border-emerald-500' : ''}`}>
-            <Ionicons name="search-outline" size={22} color={searchFocused ? "#10b981" : "#64748b"} />
+          {/* Search Bar */}
+          <View style={tw`flex-row items-center bg-slate-50 rounded-2xl px-4 py-3.5 ${searchFocused ? 'bg-white border-2 border-slate-200' : 'border border-transparent'}`}>
+            <Ionicons name="search-outline" size={20} color={searchFocused ? "#0f172a" : "#94a3b8"} />
             <TextInput
-              placeholder="Cari jurnal, buku, atau artikel..." 
+              placeholder="Cari berdasarkan judul, penulis, atau tipe..." 
               placeholderTextColor="#94a3b8" 
-              style={tw`flex-1 ml-3 h-12 text-gray-800 text-base`}
+              style={tw`flex-1 ml-3 text-slate-900 text-base`}
               value={searchQuery}
               onChangeText={handleSearch}
               onFocus={() => setSearchFocused(true)}
               onBlur={() => setSearchFocused(false)}
             />
             {searchQuery.trim() !== '' && (
-              <Pressable onPress={clearSearch} style={tw`mr-2`}>
+              <Pressable onPress={clearSearch} hitSlop={8}>
                 <Ionicons name="close-circle" size={20} color="#64748b" />
               </Pressable>
             )}
-            {searchFocused && (
-              <Pressable>
-                <Ionicons name="options-outline" size={20} color="#10b981" />
-              </Pressable>
-            )}
           </View>
+
+          {/* Search Results Info */}
+          {searchQuery.trim() !== '' && (
+            <Text style={tw`text-slate-500 text-sm mt-3 ml-1`}>
+              {displayedCollections.length} hasil ditemukan
+            </Text>
+          )}
         </View>
 
-        {/* CONTENT SECTION */}
-        <View style={tw`px-6 mt-10`}>
-          {collections.map((item) => (
-            <Pressable
-              key={item.id}
-              style={({ pressed }) => [
-                tw`flex-row bg-white rounded-3xl p-4 mb-4 shadow-xl shadow-gray-200 border border-gray-100`,
-                pressed && tw`bg-gray-50 scale-98`,
-              ]}
-            >
-              {/* PDF Icon / Thumbnail */}
-              <View style={tw`w-20 h-26 bg-emerald-50 rounded-2xl items-center justify-center mr-4 border border-emerald-100`}>
-                <View style={tw`absolute top-2 right-2`}>
-                   <View style={tw`w-2 h-2 rounded-full bg-emerald-400`} />
-                </View>
-                <Ionicons name="document-text" size={40} color="#059669" />
-                <View style={tw`bg-emerald-600 px-2 py-0.5 rounded-md mt-2`}>
-                   <Text style={tw`text-white text-[8px] font-black italic`}>PDF</Text>
-                </View>
+        {/* Content Section */}
+        <View style={tw`px-5`}>
+          {displayedCollections.length === 0 && searchQuery.trim() !== '' ? (
+            <View style={tw`items-center justify-center py-16`}>
+              <View style={tw`w-20 h-20 bg-slate-100 rounded-full items-center justify-center mb-4`}>
+                <Ionicons name="search-outline" size={36} color="#94a3b8" />
               </View>
-
-              {/* Document Info */}
-              <View style={tw`flex-1 justify-between py-1`}>
-                <View>
-                  <View style={tw`flex-row justify-between items-start`}>
-                    <View style={tw`bg-emerald-100 px-2 py-1 rounded-lg mb-2`}>
-                      <Text style={tw`text-emerald-700 text-[9px] font-black uppercase tracking-widest`}> 
-                        {item.type}
-                      </Text>
+              <Text style={tw`text-slate-900 text-lg font-semibold mb-2`}>
+                Tidak ada hasil
+              </Text>
+              <Text style={tw`text-slate-500 text-sm text-center px-8`}>
+                Coba kata kunci lain atau hapus filter pencarian
+              </Text>
+            </View>
+          ) : (
+            displayedCollections.map((item, index) => {
+              const typeColor = getTypeColor(item.type);
+              return (
+                <Pressable
+                  key={item.id}
+                  style={({ pressed }) => [
+                    tw`bg-white rounded-2xl p-4 mb-3 border border-slate-100`,
+                    pressed && tw`bg-slate-50`,
+                  ]}
+                  onPress={() => console.log('Open document:', item.id)}
+                >
+                  <View style={tw`flex-row`}>
+                    {/* Document Icon */}
+                    <View style={tw`w-16 h-20 ${typeColor.bg} rounded-xl items-center justify-center mr-4`}>
+                      <Ionicons name="document-text-outline" size={32} color={typeColor.icon} />
                     </View>
-                    <Text style={tw`text-slate-300 text-[10px] font-bold`}>{item.year}</Text>
+
+                    {/* Document Info */}
+                    <View style={tw`flex-1`}>
+                      {/* Type & Year */}
+                      <View style={tw`flex-row items-center mb-2`}>
+                        <View style={tw`${typeColor.bg} px-2.5 py-1 rounded-md mr-2`}>
+                          <Text style={tw`${typeColor.text} text-xs font-semibold`}>{item.type}</Text>
+                        </View>
+                        <Text style={tw`text-slate-400 text-xs font-medium`}>{item.year}</Text>
+                      </View>
+                      
+                      {/* Title */}
+                      <Text style={tw`font-semibold text-slate-900 text-base mb-2 leading-6`} numberOfLines={2}>
+                        {item.title}
+                      </Text>
+                      
+                      {/* Author */}
+                      <Text style={tw`text-slate-600 text-sm mb-3`} numberOfLines={1}>
+                        {item.author}
+                      </Text>
+                      
+                      {/* Meta Info */}
+                      <View style={tw`flex-row items-center justify-between`}>
+                        <View style={tw`flex-row items-center gap-4`}>
+                          <View style={tw`flex-row items-center`}>
+                            <Ionicons name="document-outline" size={14} color="#94a3b8" />
+                            <Text style={tw`text-slate-500 text-xs ml-1.5`}>{item.pages} hal</Text>
+                          </View>
+                          <View style={tw`flex-row items-center`}>
+                            <Feather name="hard-drive" size={13} color="#94a3b8" />
+                            <Text style={tw`text-slate-500 text-xs ml-1.5`}>{item.size}</Text>
+                          </View>
+                        </View>
+                        
+                        {/* Action Button */}
+                        <View style={tw`bg-emerald-600 px-4 py-2 rounded-lg`}>
+                          <Text style={tw`text-white text-xs font-semibold`}>Buka</Text>
+                        </View>
+                      </View>
+                    </View>
                   </View>
-                  
-                  <Text style={tw`font-bold text-slate-800 text-sm mb-1 leading-5`} numberOfLines={2}>
-                    {item.title}
-                  </Text>
-                  <Text style={tw`text-slate-400 text-[11px] font-medium`} numberOfLines={1}>
-                    {item.author}
-                  </Text>
-                </View>
-                
-                <View style={tw`flex-row justify-between items-center`}>
-                   <View style={tw`flex-row items-center`}>
-                      <Feather name="download-cloud" size={12} color="#94a3b8" />
-                      <Text style={tw`text-slate-400 text-[10px] ml-1 font-bold uppercase`}>{item.size}</Text>
-                   </View>
-                   <View style={tw`bg-gray-50 px-3 py-1.5 rounded-xl border border-gray-100`}>
-                      <Text style={tw`text-emerald-600 text-[10px] font-bold`}>Buka File</Text>
-                   </View>
-                </View>
-              </View>
-            </Pressable>
-          ))}
+                </Pressable>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
