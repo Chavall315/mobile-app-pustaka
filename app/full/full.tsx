@@ -2,7 +2,7 @@ import { collections } from '@/data/collections';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Image, Modal, Pressable, ScrollView, Text, TextInput, View, } from 'react-native';
+import { Image, Modal, Pressable, ScrollView, StatusBar, Text, TextInput, View, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 
@@ -42,14 +42,14 @@ export default function FullScreen() {
     };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-black`}>
-      {/* Header Section - Compact */}
+    <SafeAreaView style={tw`flex-1 bg-white`}>
+      <StatusBar barStyle="dark-content" />
       <View style={tw`bg-emerald-700 px-6 py-5`}>
         <View style={tw`flex-row items-center justify-between`}>
           <View style={tw`flex-row items-center flex-1 mr-4`}>
             <Pressable 
               onPress={handleBack} 
-              style={tw`w-10 h-10 rounded-xl bg-white/20 items-center justify-center mr-4`}
+              style={tw`bg-white/20 p-2 rounded-xl mr-4 w-10 h-10 rounded-xl  items-center justify-center mr-4`}
             >
               <Ionicons name="arrow-back" size={22} color="#ffffff" />
             </Pressable>

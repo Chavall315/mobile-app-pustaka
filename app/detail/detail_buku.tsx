@@ -1,4 +1,4 @@
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import {
@@ -38,9 +38,14 @@ const DetailBookScreen = () => {
         
         {/* Header */}
         <View style={tw`bg-emerald-800 rounded-b-[35px] shadow-lg`}>
-          <StatusBar barStyle="light-content" />
           <View style={tw`pt-4 pb-8 mt-7 px-6`}>
-            <View style={tw`flex-row justify-between mt-10 items-center`}>
+            <View style={tw`flex-row items-center mt-10`}>
+              <Pressable 
+                onPress={() => router.back()} 
+                style={tw`bg-white/20 p-2 rounded-xl mr-4`}
+              >
+                <Ionicons name="arrow-back" size={24} color="white" />
+              </Pressable>
               <View>
                 <Text style={tw`text-white text-3xl font-extrabold tracking-tight`}>OPAC</Text>
                 <Text style={tw`text-emerald-100 text-base opacity-80 uppercase`}>
@@ -53,24 +58,10 @@ const DetailBookScreen = () => {
 
         {/* Search Section */}
         <View style={tw`bg-white mt-6 rounded-3xl p-5 shadow-xl border border-gray-100`}>
-          {/* Tab Switcher */}
-          <View style={tw`flex-row bg-gray-100 rounded-xl p-1 mb-4`}>
-            {(['Cari', 'Browse'] as const).map((tab) => (
-                <Pressable
-                  key={tab}
-                  onPress={() => setActiveTab(tab)}
-                  style={tw`flex-1 py-2 rounded-lg ${activeTab === tab ? 'bg-white shadow-sm' : ''}`}
-                >
-                  <Text style={tw`text-center font-bold ${activeTab === tab ? 'text-emerald-800' : 'text-gray-400'}`}>
-                    {tab}
-                  </Text>
-                </Pressable>
-            ))}
-          </View>
 
           {/* Input Field */}
           <View style={tw`flex-row items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-1 mb-3`}>
-            <Text style={tw`text-lg mr-2`}>🔍</Text>
+            <Ionicons name="search-outline" size={20} color="#059669" />
             <TextInput
               placeholder="Cari judul, pengarang..."
               value={searchQuery}
@@ -82,21 +73,12 @@ const DetailBookScreen = () => {
 
           {/* Filters and Action */}
           <View style={tw`flex-row gap-2`}>
-            <Pressable style={tw`flex-1 bg-gray-50 border border-gray-200 rounded-xl justify-center items-center py-3`}>
-              <Text style={tw`text-xs text-gray-600 font-semibold`}>Semua Bahan ▾</Text>
-            </Pressable>
             <Pressable 
               onPress={() => handleSearch(searchQuery)}
               style={tw`flex-1 bg-emerald-600 rounded-xl justify-center items-center py-3 shadow-md`}
             >
               <Text style={tw`text-white font-bold`}>Cari Sekarang</Text>
             </Pressable>
-          </View>
-
-          <View style={tw`flex-row justify-center gap-4 mt-4`}>
-            <Text style={tw`text-[11px] text-emerald-700 font-medium`}>Pencarian Lanjut</Text>
-            <Text style={tw`text-[11px] text-gray-300`}>|</Text>
-            <Text style={tw`text-[11px] text-emerald-700 font-medium`}>Bantuan</Text>
           </View>
         </View>
 

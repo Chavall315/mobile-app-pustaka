@@ -56,7 +56,7 @@ export default function RepositoryScreen() {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-8`}>
         
         {/* Header */}
-        <View style={tw`px-5 pt-6 pb-8 bg-emerald-800`}>
+        <View style={tw`px-5 pt-6 pb-8 bg-emerald-800 rounded-b-[35px] shadow-lg`}>
           <View style={tw`mb-6`}>
             <Text style={tw`text-slate-300 text-3xl font-bold tracking-tight mb-2`}>
               Kepustakawanan
@@ -160,7 +160,7 @@ export default function RepositoryScreen() {
                         
                         {/* Action Button */}
                         <View style={tw`bg-emerald-600 px-4 py-2 rounded-lg`}>
-                          <Text style={tw`text-white text-xs font-semibold`}>Buka</Text>
+                          <Text style={tw`text-white text-xs font-semibold`}>Download</Text>
                         </View>
                       </View>
                     </View>

@@ -45,22 +45,6 @@ const OPACScreen: React.FC = () => {
 
         {/* Search Section */}
         <View style={tw`bg-white mt-6 rounded-3xl p-5 shadow-xl border border-gray-100`}>
-          {/* Tab Switcher */}
-          <View style={tw`flex-row bg-gray-100 rounded-xl p-1 mb-4`}>
-            {(['Cari'] as const).map((tab) => (
-                <Pressable
-                  key={tab}
-                  onPress={() => setActiveTab(tab)}
-                  style={tw`flex-1 py-2 rounded-lg ${activeTab === tab ? 'bg-white shadow-sm' : ''}`}
-                >
-                  <Text style={tw`text-center font-bold ${activeTab === tab ? 'text-emerald-800' : 'text-gray-400'}`}>
-                    {tab}
-                  </Text>
-                </Pressable>
-            ))}
-          </View>
-
-          {/* Input Field */}
           <View style={tw`flex-row items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-1 mb-3`}>
             <View style={tw`w-10 h-10 rounded-xl items-center justify-center`}>
               <Ionicons name="search-outline" size={20} color="#059669" />
@@ -94,9 +78,6 @@ const OPACScreen: React.FC = () => {
                 <View style={tw`w-8 h-1 bg-yellow-400 mb-1 rounded-full`} />
                 <Text style={tw`text-lg font-extrabold text-gray-900 tracking-tight`}>Koleksi Unggulan</Text>
               </View>
-              <Pressable>
-                <Text style={tw`text-emerald-700 font-bold text-xs`}>Lihat Semua →</Text>
-              </Pressable>
             </View>
 
             <FlatList
@@ -136,9 +117,6 @@ const OPACScreen: React.FC = () => {
                 <View style={tw`w-8 h-1 bg-yellow-400 mb-1 rounded-full`} />
                 <Text style={tw`text-lg font-extrabold text-gray-900 tracking-tight`}>Buku Terbaru</Text>
               </View>
-              <Pressable>
-                <Text style={tw`text-emerald-700 font-bold text-xs`}>Lihat Semua →</Text>
-              </Pressable>
             </View>
 
             <FlatList
