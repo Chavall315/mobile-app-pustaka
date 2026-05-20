@@ -1,151 +1,293 @@
-import { Ionicons } from '@expo/vector-icons';
-import { router } from 'expo-router';
-import React, { useState } from 'react';
-import { FlatList, Image, Pressable, ScrollView, StatusBar, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import tw from 'twrnc';
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  ScrollView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import tw from "twrnc";
 
+const featuredBooks = [
+  {
+    title: "Penyuluhan pertanian / Mayasari Pengembangan Sinar Tani",
+    coverUrl:
+      "https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/4647.jpg",
+    href: "/detail/detail_buku",
+  },
+  {
+    title: "Dinamika penyuluhan pertanian / Leta Rafael Levis",
+    coverUrl:
+      "https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/63496.jpg",
+    href: "/detail/detail_buku",
+  },
+  {
+    title:
+      "Optimalisasi lahan rawa: akselerasi menuju lumbung pangan dunia 2045",
+    coverUrl:
+      "https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/76563.jpg",
+    href: "/detail/detail_buku",
+  },
+];
+
+const recentBooks = [
+  {
+    title: "Hama dan penyakit pada tanaman kentang",
+    href: "/detail/detail_buku",
+  },
+  {
+    title: "Proceedings seminar sistem pengurusan hutan alam",
+    href: "/detail/detail_buku",
+  },
+  {
+    title: "Simposium pemanfaatan tempe dalam kesehatan",
+    href: "/detail/detail_buku",
+  },
+];
+
+// ── Book card ──────────────────────────────────────────────
+type BookItem = {
+  title: string;
+  coverUrl?: string;
+  href: string;
+};
+
+function BookCard({ item }: { item: BookItem }) {
+  const [imgError, setImgError] = useState(false);
+  const hasCover = item.coverUrl && !imgError;
+
+  return (
+    <Pressable
+      style={tw`w-30 mr-3.5`}
+      onPress={() => router.push(item.href as any)}
+    >
+      {/* Cover */}
+      <View
+        style={[
+          tw`w-30 rounded-xl overflow-hidden`,
+          { height: 164, borderWidth: 0.5, borderColor: "rgba(0,0,0,0.07)" },
+        ]}
+      >
+        {hasCover ? (
+          <Image
+            source={{ uri: item.coverUrl }}
+            style={tw`w-full h-full`}
+            resizeMode="cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <PlaceholderCover />
+        )}
+
+        {/* Badge */}
+        <View
+          style={[
+            tw`absolute top-2 left-2 px-1.5 py-0.5 rounded-md`,
+            { backgroundColor: "rgba(4,120,87,0.88)" },
+          ]}
+        >
+          <Text
+            style={[
+              tw`text-[9px] font-semibold uppercase tracking-wider`,
+              { color: "#C6EADB" },
+            ]}
+          >
+            Buku
+          </Text>
+        </View>
+      </View>
+
+      {/* Title */}
+      <Text
+        style={[tw`mt-2.5 text-xs font-medium leading-5`, { color: "#1a1a1a" }]}
+        numberOfLines={2}
+      >
+        {item.title}
+      </Text>
+
+      {/* Status */}
+      <View style={tw`flex-row items-center mt-1 gap-1`}>
+        <View
+          style={[tw`w-1.5 h-1.5 rounded-full`, { backgroundColor: "#059669" }]}
+        />
+        <Text style={[tw`text-[11px]`, { color: "#047857" }]}>Tersedia</Text>
+      </View>
+    </Pressable>
+  );
+}
+
+function PlaceholderCover() {
+  return (
+    <View
+      style={[
+        tw`flex-1 items-center justify-center`,
+        { backgroundColor: "#DDE6E1" },
+      ]}
+    >
+      <View style={tw`gap-1.5 items-center`}>
+        {[44, 32, 38].map((w, i) => (
+          <View
+            key={i}
+            style={[
+              tw`h-0.5 rounded-full`,
+              { width: w, backgroundColor: "#B8CCBF" },
+            ]}
+          />
+        ))}
+      </View>
+    </View>
+  );
+}
+
+// ── Section header ─────────────────────────────────────────
+function SectionHeader({ title }: { title: string }) {
+  return (
+    <View style={tw`flex-row items-end justify-between px-5 mb-3.5`}>
+      <View style={tw`gap-1`}>
+        <View
+          style={[tw`w-5 h-0.5 rounded-full`, { backgroundColor: "#F0B429" }]}
+        />
+        <Text style={[tw`text-sm font-medium`, { color: "#1a1a1a" }]}>
+          {title}
+        </Text>
+      </View>
+      <TouchableOpacity activeOpacity={0.65}>
+        <Text style={[tw`text-xs font-medium`, { color: "#047857" }]}>
+          Lihat semua
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+// ── Main screen ────────────────────────────────────────────
 const OPACScreen: React.FC = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<'Cari'>('Cari');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
 
-  const featuredBooks = [
-    { title: 'Penyuluhan pertanian / Mayasari Pengembangan Sinar Tani', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/4647.jpg', href : '/detail/detail_buku' },
-    { title: 'Dinamika penyuluhan pertanian / Leta Rafael Levis', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/63496.jpg', href : '/detail/detail_buku' },
-    { title: 'Optimalisasi lahan rawa: akselerasi menuju lumbung pangan dunia 2045', coverUrl: 'https://www.kikp-pertanian.id/pustaka/uploaded_files/sampul_koleksi/original/Monograf/76563.jpg', href : '/detail/detail_buku' },
-  ];
-
-  const recentBooks = [
-    { title: 'Hama dan penyakit pada tanaman kentang', isPlaceholder: true, href : '/detail/detail_buku' },
-    { title: 'Proceedings seminar sistem pengurusan hutan alam', isPlaceholder: true, href : '/detail/detail_buku' },
-    { title: 'Simposium pemanfaatan tempe dalam kesehatan', isPlaceholder: true, href : '/detail/detail_buku' },
-  ];
-
-  const handleSearch = (query: string) => {
-    console.log(query);
+  const handleSearch = () => {
+    console.log("Search:", searchQuery);
   };
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-white`}>
-      <StatusBar barStyle="dark-content" />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={tw`pb-10 bg-gray-50`}>
-        {/* Header */}
-        <View style={tw`bg-emerald-800 rounded-b-[35px] shadow-lg`}>
-          <View style={tw`pt-4 pb-8 mt-7 px-6`}>
-            <View style={tw`flex-row justify-between items-center`}>
-              <View>
-                <Text style={tw`text-white text-3xl font-extrabold tracking-tight`}>OPAC</Text>
-                <Text style={tw`text-emerald-100 text-base opacity-80 uppercase`}>
-                  Perpustakaan Pertanian
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
+    <SafeAreaView style={[tw`flex-1`, { backgroundColor: "#F4F6F3" }]}>
+      <StatusBar barStyle="light-content" />
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={tw`pb-10`}
+        keyboardShouldPersistTaps="handled"
+      >
+        {/* ── Header ── */}
+        <View
+          style={[
+            tw`px-6 pt-8 pb-8 rounded-b-[32px]`,
+            { backgroundColor: "#047857" },
+          ]}
+        >
+          <Text
+            style={[
+              tw`text-xs font-medium mb-1.5 uppercase`,
+              { color: "#6EE7B7", letterSpacing: 1.8 },
+            ]}
+          >
+            Katalog Perpustakaan
+          </Text>
 
-        {/* Search Section */}
-        <View style={tw`bg-white mt-6 rounded-3xl p-5 shadow-xl border border-gray-100`}>
-          <View style={tw`flex-row items-center bg-gray-50 border border-gray-200 rounded-2xl px-4 py-1 mb-3`}>
-            <View style={tw`w-10 h-10 rounded-xl items-center justify-center`}>
-              <Ionicons name="search-outline" size={20} color="#059669" />
-            </View>
+          {/* Title — swap fontFamily with your loaded DM Serif Display if available */}
+          <Text
+            style={[
+              tw`text-[34px] mb-1`,
+              { color: "#F0FDF4", fontFamily: "serif", lineHeight: 40 },
+            ]}
+          >
+            OPAC
+          </Text>
+
+          <Text style={[tw`text-sm mb-6`, { color: "#A7F3D0" }]}>
+            Perpustakaan Pertanian
+          </Text>
+
+          {/* Search input */}
+          <View
+            style={[
+              tw`flex-row items-center rounded-2xl px-4 h-12 mb-3`,
+              {
+                backgroundColor: searchFocused
+                  ? "rgba(255,255,255,0.14)"
+                  : "rgba(255,255,255,0.09)",
+                borderWidth: 0.5,
+                borderColor: searchFocused
+                  ? "rgba(255,255,255,0.28)"
+                  : "rgba(255,255,255,0.15)",
+              },
+            ]}
+          >
+            <Ionicons
+              name="search-outline"
+              size={17}
+              color="rgba(240,250,245,0.5)"
+            />
             <TextInput
-              placeholder="Cari judul, pengarang..."
+              placeholder="Cari judul, pengarang, subjek..."
+              placeholderTextColor="rgba(240,250,245,0.35)"
+              style={[tw`flex-1 ml-2.5 text-sm`, { color: "#F0FAF5" }]}
               value={searchQuery}
               onChangeText={setSearchQuery}
-              style={tw`flex-1 h-12 text-gray-800`}
-              placeholderTextColor="#9CA3AF"
+              onFocus={() => setSearchFocused(true)}
+              onBlur={() => setSearchFocused(false)}
+              returnKeyType="search"
+              onSubmitEditing={handleSearch}
             />
           </View>
 
-          {/* Filters and Action */}
-          <View style={tw`flex-row gap-2`}>
-            <Pressable 
-              onPress={() => handleSearch(searchQuery)}
-              style={tw`flex-1 bg-emerald-600 rounded-xl justify-center items-center py-3 shadow-md`}
-            >
-              <Text style={tw`text-white font-bold`}>Cari Sekarang</Text>
-            </Pressable>
-          </View>
+          {/* Search button */}
+          <TouchableOpacity
+            style={[
+              tw`flex-row items-center justify-center h-11 rounded-[13px] gap-2`,
+              { backgroundColor: "#065F46" },
+            ]}
+            activeOpacity={0.75}
+            onPress={handleSearch}
+          >
+            <Ionicons name="search-outline" size={15} color="#D4F0E3" />
+            <Text style={[tw`text-sm font-medium`, { color: "#D4F0E3" }]}>
+              Cari Sekarang
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Collections */}
-        <View style={tw`mt-10`}>
+        {/* ── Collections ── */}
+        <View style={tw`pt-6`}>
           {/* Koleksi Unggulan */}
-          <View style={tw`mb-10`}>
-            <View style={tw`flex-row justify-between items-end px-6 mb-4`}>
-              <View>
-                <View style={tw`w-8 h-1 bg-yellow-400 mb-1 rounded-full`} />
-                <Text style={tw`text-lg font-extrabold text-gray-900 tracking-tight`}>Koleksi Unggulan</Text>
-              </View>
-            </View>
-
+          <View style={tw`mb-7`}>
+            <SectionHeader title="Koleksi Unggulan" />
             <FlatList
               data={featuredBooks}
               horizontal
-              contentContainerStyle={tw`pl-6 pr-1`}
+              contentContainerStyle={tw`px-5`}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Pressable 
-                  style={tw`w-40 mr-5`}
-                  onPress={() => router.push(item.href)}
-                >
-                  <View style={tw`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden`}>
-                    <Image 
-                      source={{ uri: item.coverUrl }}
-                      style={tw`h-56 w-full`}
-                      resizeMode="cover"
-                    />
-                    <View style={tw`absolute top-2 left-2 bg-emerald-600/90 px-2 py-0.5 rounded-md`}>
-                      <Text style={tw`text-[8px] text-white font-bold uppercase`}>Buku</Text>
-                    </View>
-                  </View>
-                  <Text style={tw`mt-3 text-xs font-bold text-gray-800 leading-4`} numberOfLines={2}>
-                    {item.title}
-                  </Text>
-                  <Text style={tw`mt-1 text-[10px] text-gray-400 font-medium`}>Tersedia</Text>
-                </Pressable>
-              )}
+              keyExtractor={(_, i) => `featured-${i}`}
+              renderItem={({ item }) => <BookCard item={item} />}
             />
           </View>
 
           {/* Buku Terbaru */}
-          <View style={tw`mb-10`}>
-            <View style={tw`flex-row justify-between items-end px-6 mb-4`}>
-              <View>
-                <View style={tw`w-8 h-1 bg-yellow-400 mb-1 rounded-full`} />
-                <Text style={tw`text-lg font-extrabold text-gray-900 tracking-tight`}>Buku Terbaru</Text>
-              </View>
-            </View>
-
+          <View style={tw`mb-7`}>
+            <SectionHeader title="Buku Terbaru" />
             <FlatList
               data={recentBooks}
               horizontal
-              contentContainerStyle={tw`pl-6 pr-1`}
+              contentContainerStyle={tw`px-5`}
               showsHorizontalScrollIndicator={false}
-              keyExtractor={(_, index) => index.toString()}
-              renderItem={({ item }) => (
-                <Pressable 
-                  style={tw`w-40 mr-5`}
-                  onPress={() => router.push(item.href)}
-                >
-                  <View style={tw`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden`}>
-                    <View style={tw`h-56 bg-gray-100 items-center justify-center p-4`}>
-                      <Text style={tw`text-gray-300 text-[10px] font-bold text-center tracking-widest leading-4`}>
-                        COVER{'\n'}NOT{'\n'}AVAILABLE
-                      </Text>
-                    </View>
-                    <View style={tw`absolute top-2 left-2 bg-emerald-600/90 px-2 py-0.5 rounded-md`}>
-                      <Text style={tw`text-[8px] text-white font-bold uppercase`}>Buku</Text>
-                    </View>
-                  </View>
-                  <Text style={tw`mt-3 text-xs font-bold text-gray-800 leading-4`} numberOfLines={2}>
-                    {item.title}
-                  </Text>
-                  <Text style={tw`mt-1 text-[10px] text-gray-400 font-medium`}>Tersedia</Text>
-                </Pressable>
-              )}
+              keyExtractor={(_, i) => `recent-${i}`}
+              renderItem={({ item }) => <BookCard item={item} />}
             />
           </View>
         </View>

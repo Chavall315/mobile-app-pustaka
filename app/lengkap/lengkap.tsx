@@ -1,157 +1,304 @@
-import { collections } from '@/data/collections';
-import { Ionicons } from '@expo/vector-icons';
-import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import tw from 'twrnc';
+import { collections } from "@/data/collections";
+import { Ionicons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { useState } from "react";
+import {
+  Image,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import tw from "twrnc";
 
 export default function LengkapScreen() {
   const [showAbstract, setShowAbstract] = useState(false);
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const item = collections.find(c => c.id === Number(id));
+  const item = collections.find((c) => c.id === Number(id));
 
   if (!item) {
     return (
-      <SafeAreaView style={tw`flex-1 justify-center items-center bg-gray-50`}>
-        <Ionicons name="alert-circle-outline" size={64} color="#9CA3AF" />
-        <Text style={tw`text-gray-600 mt-4 text-lg`}>Data tidak ditemukan</Text>
+      <SafeAreaView
+        style={[
+          tw`flex-1 justify-center items-center`,
+          { backgroundColor: "#F4F6F3" },
+        ]}
+      >
+        <View
+          style={[
+            tw`w-16 h-16 rounded-full items-center justify-center mb-3`,
+            { backgroundColor: "#F1F5F9" },
+          ]}
+        >
+          <Ionicons name="alert-circle-outline" size={32} color="#cbd5e1" />
+        </View>
+        <Text style={[tw`text-sm font-medium`, { color: "#1a1a1a" }]}>
+          Data tidak ditemukan
+        </Text>
       </SafeAreaView>
     );
   }
 
   return (
-    <SafeAreaView style={tw`flex-1 bg-black`}>
-      <View style={tw`bg-white shadow-sm`}>
-        <View style={tw`flex-row items-center bg-emerald-800 px-5 py-4`}>
-          <Pressable 
-            onPress={() => router.back()} 
-            style={tw`mr-3 p-2 -ml-2 rounded-full active:bg-gray-100`}
-          >
-            <Ionicons name="arrow-back" size={24} color="#ffffffff" />
-          </Pressable>
-          <Text style={tw`text-lg font-semibold text-white flex-1`} numberOfLines={1}>
-            Detail Publikasi
-          </Text>
+    <SafeAreaView style={[tw`flex-1`, { backgroundColor: "#047857" }]}>
+      {/* ── Top bar ── */}
+      <View style={[tw`flex-row items-center px-5 pt-2 pb-5`, { gap: 10 }]}>
+        <Pressable
+          onPress={() => router.back()}
+          style={[
+            tw`w-9 h-9 rounded-[10px] items-center justify-center`,
+            {
+              backgroundColor: "rgba(255,255,255,0.12)",
+              borderWidth: 0.5,
+              borderColor: "rgba(255,255,255,0.2)",
+            },
+          ]}
+          hitSlop={8}
+        >
+          <Ionicons name="arrow-back" size={16} color="#F0FDF4" />
+        </Pressable>
+        <Text
+          style={[tw`flex-1 text-sm font-medium`, { color: "#F0FDF4" }]}
+          numberOfLines={1}
+        >
+          Detail Publikasi
+        </Text>
+      </View>
+
+      {/* ── Cover hero ── */}
+      <View
+        style={[
+          tw`items-center pb-8`,
+          {
+            backgroundColor: "#047857",
+            borderBottomLeftRadius: 32,
+            borderBottomRightRadius: 32,
+          },
+        ]}
+      >
+        <View
+          style={{
+            borderRadius: 16,
+            overflow: "hidden",
+            borderWidth: 0.5,
+            borderColor: "rgba(0,0,0,0.1)",
+          }}
+        >
+          {item.image ? (
+            <Image
+              source={item.image}
+              style={{ width: 148, height: 200 }}
+              resizeMode="cover"
+            />
+          ) : (
+            <PlaceholderCover />
+          )}
         </View>
       </View>
 
-      <ScrollView 
-        contentContainerStyle={tw`pb-0`} 
+      {/* ── Scrollable body ── */}
+      <ScrollView
+        style={[tw`flex-1`, { backgroundColor: "#F4F6F3" }]}
+        contentContainerStyle={tw`px-4 pt-5 pb-12`}
         showsVerticalScrollIndicator={false}
-        style={tw`flex-1`}
       >
-        <View style={tw`bg-white px-6 pt-8 pb-6`}>
-          <View style={tw`items-center`}>
-            <View style={tw`shadow-lg`}>
-              <Image
-                source={item.image}
-                style={tw`w-44 h-60 rounded-2xl`}
-                resizeMode="cover"
-              />
-            </View>
-          </View>
-        </View>
-
-        <View style={tw`bg-white px-6 py-6`}>
-          <Text style={tw`text-2xl font-bold text-gray-900 leading-8`}>
+        {/* Title card */}
+        <View
+          style={[
+            tw`bg-white rounded-[18px] p-4 mb-3`,
+            { borderWidth: 0.5, borderColor: "#E8EDF3" },
+          ]}
+        >
+          <Text
+            style={[
+              tw`text-xl mb-2.5 leading-7`,
+              { fontFamily: "serif", color: "#1a1a1a" },
+            ]}
+          >
             {item.title}
           </Text>
-          <View style={tw`flex-row items-center mt-3`}>
-            <View style={tw`bg-emerald-50 px-3 py-1.5 rounded-full`}>
-              <Text style={tw`text-emerald-700 font-semibold text-sm`}>
-                {item.year}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <View style={tw`bg-white px-6 py-6`}>
-          <View style={tw`flex-row items-center mb-3`}>
-            <View style={tw`w-1 h-5 bg-emerald-500 rounded-full mr-3`} />
-            <Text style={tw`text-lg font-bold text-gray-900`}>Abstract</Text>
-          </View>
-          
-          <Text 
-            style={tw`text-gray-700 leading-6 text-base`}
-            numberOfLines={showAbstract ? undefined : 4}
+          <View
+            style={[
+              tw`self-start px-3 py-1 rounded-full`,
+              {
+                backgroundColor: "#ECFDF5",
+                borderWidth: 0.5,
+                borderColor: "#A7F3D0",
+              },
+            ]}
           >
-            {item.abstract}
-          </Text>
-
-          {item.abstract?.length > 200 && (
-            <Pressable 
-              onPress={() => setShowAbstract(!showAbstract)}
-              style={tw`mt-4 flex-row items-center`}
-            >
-              <Text style={tw`text-emerald-600 font-semibold mr-1`}>
-                {showAbstract ? 'Sembunyikan' : 'Baca Selengkapnya'}
-              </Text>
-              <Ionicons 
-                name={showAbstract ? "chevron-up" : "chevron-down"} 
-                size={18} 
-                color="#059669" 
-              />
-            </Pressable>
-          )}
+            <Text style={[tw`text-xs font-medium`, { color: "#047857" }]}>
+              {item.year}
+            </Text>
+          </View>
         </View>
 
-        <View style={tw`bg-white w-full px-6 py-6 pb-20`}>
-          <View style={tw`flex-row items-center mb-5`}>
-            <View style={tw`w-1 h-5 bg-emerald-500 rounded-full mr-3`} />
-            <Text style={tw`text-lg font-bold text-gray-900`}>
-              Informasi Publikasi
+        {/* Abstract card */}
+        {item.abstract ? (
+          <View
+            style={[
+              tw`bg-white rounded-[18px] p-4 mb-3`,
+              { borderWidth: 0.5, borderColor: "#E8EDF3" },
+            ]}
+          >
+            <SectionLabel title="Abstrak" />
+            <Text
+              style={[tw`text-xs leading-6`, { color: "#475569" }]}
+              numberOfLines={showAbstract ? undefined : 4}
+            >
+              {item.abstract}
             </Text>
+            {item.abstract.length > 200 && (
+              <TouchableOpacity
+                onPress={() => setShowAbstract(!showAbstract)}
+                activeOpacity={0.7}
+                style={tw`flex-row items-center mt-2.5 gap-1`}
+              >
+                <Text style={[tw`text-xs font-medium`, { color: "#047857" }]}>
+                  {showAbstract ? "Sembunyikan" : "Baca Selengkapnya"}
+                </Text>
+                <Ionicons
+                  name={showAbstract ? "chevron-up" : "chevron-down"}
+                  size={13}
+                  color="#047857"
+                />
+              </TouchableOpacity>
+            )}
           </View>
+        ) : null}
 
-          <View style={tw`mb-5`}>
-            <View style={tw`flex-row items-center mb-2`}>
-              <View style={tw`w-8 h-8 bg-blue-50 rounded-full items-center justify-center mr-3`}>
-                <Ionicons name="person-outline" size={16} color="#2563EB" />
-              </View>
-              <Text style={tw`text-gray-500 text-sm font-medium`}>
-                Authors
-              </Text>
-            </View>
-            <Text style={tw`text-blue-700 leading-6 ml-11 text-base`}>
-              {item.author}
-            </Text>
-          </View>
+        {/* Info card */}
+        <View
+          style={[
+            tw`bg-white rounded-[18px] p-4`,
+            { borderWidth: 0.5, borderColor: "#E8EDF3" },
+          ]}
+        >
+          <SectionLabel title="Informasi Publikasi" />
 
-          <View style={tw`h-px bg-gray-100 mb-5`} />
+          <InfoRow
+            icon="person-outline"
+            iconBg="#EBF4FF"
+            iconColor="#1D5FA3"
+            label="Authors"
+            value={item.author}
+            accent
+          />
 
-          <View style={tw`mb-5`}>
-            <View style={tw`flex-row items-center mb-2`}>
-              <View style={tw`w-8 h-8 bg-purple-50 rounded-full items-center justify-center mr-3`}>
-                <Ionicons name="business-outline" size={16} color="#7C3AED" />
-              </View>
-              <Text style={tw`text-gray-500 text-sm font-medium`}>
-                Publisher
-              </Text>
-            </View>
-            <Text style={tw`text-gray-900 leading-6 ml-11 text-base`}>
-              {item.publisher}
-            </Text>
-          </View>
+          <Divider />
 
-          <View style={tw`h-px bg-gray-100 mb-5`} />
+          <InfoRow
+            icon="business-outline"
+            iconBg="#EEE9FB"
+            iconColor="#5A3CA8"
+            label="Publisher"
+            value={item.publisher}
+          />
 
-          <View>
-            <View style={tw`flex-row items-center mb-2`}>
-              <View style={tw`w-8 h-8 bg-emerald-50 rounded-full items-center justify-center mr-3`}>
-                <Ionicons name="folder-outline" size={16} color="#059669" />
-              </View>
-              <Text style={tw`text-gray-500 text-sm font-medium`}>
-                Collection
-              </Text>
-            </View>
-            <Text style={tw`text-blue-700 leading-6 ml-11 text-base`}>
-              {item.koleksi}
-            </Text>
-          </View>
+          <Divider />
+
+          <InfoRow
+            icon="folder-outline"
+            iconBg="#ECFDF5"
+            iconColor="#047857"
+            label="Collection"
+            value={item.koleksi}
+            accent
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+// ── Sub-components ─────────────────────────────────────────
+
+function SectionLabel({ title }: { title: string }) {
+  return (
+    <View style={tw`gap-1 mb-3.5`}>
+      <View
+        style={[tw`w-5 h-0.5 rounded-full`, { backgroundColor: "#F0B429" }]}
+      />
+      <Text style={[tw`text-sm font-medium`, { color: "#1a1a1a" }]}>
+        {title}
+      </Text>
+    </View>
+  );
+}
+
+function InfoRow({
+  icon,
+  iconBg,
+  iconColor,
+  label,
+  value,
+  accent = false,
+}: {
+  icon: string;
+  iconBg: string;
+  iconColor: string;
+  label: string;
+  value: string;
+  accent?: boolean;
+}) {
+  return (
+    <View style={tw`mb-3.5`}>
+      <View style={tw`flex-row items-center gap-2 mb-1.5`}>
+        <View
+          style={[
+            tw`w-7 h-7 rounded-lg items-center justify-center`,
+            { backgroundColor: iconBg },
+          ]}
+        >
+          <Ionicons name={icon as any} size={13} color={iconColor} />
+        </View>
+        <Text
+          style={[
+            tw`text-[10px] font-medium uppercase`,
+            { color: "#94a3b8", letterSpacing: 1 },
+          ]}
+        >
+          {label}
+        </Text>
+      </View>
+      <Text
+        style={[
+          tw`text-sm leading-5 pl-9`,
+          { color: accent ? "#047857" : "#1a1a1a" },
+        ]}
+      >
+        {value}
+      </Text>
+    </View>
+  );
+}
+
+function Divider() {
+  return (
+    <View style={[tw`mb-3.5`, { height: 0.5, backgroundColor: "#E8EDF3" }]} />
+  );
+}
+
+function PlaceholderCover() {
+  return (
+    <View
+      style={[
+        { width: 148, height: 200, backgroundColor: "#DDE6E1" },
+        tw`items-center justify-center gap-1.5`,
+      ]}
+    >
+      {[52, 38, 46].map((w, i) => (
+        <View
+          key={i}
+          style={[
+            tw`h-0.5 rounded-full`,
+            { width: w, backgroundColor: "#B8CCBF" },
+          ]}
+        />
+      ))}
+    </View>
   );
 }
